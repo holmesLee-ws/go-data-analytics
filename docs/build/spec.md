@@ -90,7 +90,7 @@ G1에서 원 기관 URL·조회일과 함께 `curriculum/sources.md`에 넣는�
 | 공공데이터의 제공 및 이용 활성화에 관한 법률 | EU Open Data Directive(Directive (EU) 2019/1024), 미국 OPEN Government Data Act(Evidence Act Title II) |
 | 통계법·국가데이터처 국가통계 품질 | UN 공식 통계 기본원칙, ASA 통계 실무 윤리 지침, ISI 전문가 윤리 선언 |
 | 표시·광고의 공정화에 관한 법률의 실증(외부 수치 주장, L3 — G1 리뷰로 추가) | 글로벌은 L3의 윤리 지침으로 갈음 |
-| 데이터기반행정 활성화에 관한 법률(S6 — 정책 효과를 데이터로 판단하는 국내 제도, G1에서 추가) | 미국 Evidence Act |
+| 인공지능 및 데이터 기반 행정 활성화에 관한 법률(옛 데이터기반행정 활성화에 관한 법률, 2026 전부개정. S6 — 정책 효과를 데이터로 판단하는 국내 제도, G1에서 추가) | 미국 Evidence Act |
 | 통계 방법론(국내 법제 없음) | ASA p값 성명(2016), GAISE 보고서, Hernán·Robins 「Causal Inference: What If」, Hyndman·Athanasopoulos 「Forecasting: Principles and Practice」, Kohavi 외 「Trustworthy Online Controlled Experiments」. G1에서 추가: Simpson(1951) 원 논문(D4 함정), Wickham 「Tidy Data」·Broman·Woo 「Data Organization in Spreadsheets」(P1·P4 표 정리 원칙), ISO/IEC 25012(D3·P4 품질 특성), SQLite 문서(P2·P3 실습 엔진), North Star Playbook(D2, 업계 자료로 표시) |
 
 ## 근거 확인 방법과 확인 시점
