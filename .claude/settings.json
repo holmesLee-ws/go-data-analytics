@@ -22,7 +22,8 @@
       "Bash(sqlite3)",
       "Bash(sqlite3 *)",
       "Bash(*/sqlite3 *)",
-      "PowerShell(sqlite3 *)"
+      "PowerShell(sqlite3 *)",
+      "Agent"
     ]
   }
 }
