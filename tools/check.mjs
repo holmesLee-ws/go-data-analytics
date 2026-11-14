@@ -129,6 +129,11 @@ function main() {
     try { JSON.parse(read(p)); } catch (e) { errors.push(`${p}: JSON 오류 ${e.constructor.name}`); }
   }
   if (!existsSync(join(root, "learner-template/log.md"))) errors.push("learner-template/log.md 없음");
+  try {
+    const st = JSON.parse(read("learner-template/state.json"));
+    for (const k of ["learner", "current", "modules", "gaps", "pace", "preferences", "lab_files", "studio_files"]) if (!(k in st)) errors.push(`learner-template/state.json: 「${k}」 칸 없음`);
+    for (const k of ["module", "path", "pending_probe"]) if (!(k in (st.current || {}))) errors.push(`learner-template/state.json: current.${k} 없음`);
+  } catch {}
   for (const s of readdirSync(join(root, ".claude/skills"))) {
     if (statSync(join(root, ".claude/skills", s)).isDirectory() && !existsSync(join(root, ".claude/skills", s, "SKILL.md"))) errors.push(`스킬 ${s}: SKILL.md 없음`);
   }
