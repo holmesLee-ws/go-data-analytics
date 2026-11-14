@@ -19,7 +19,7 @@ const OFFICIAL_HOSTS = new Set([
   "www.kdata.or.kr", "eur-lex.europa.eu", "www.govinfo.gov", "www.amstat.org", "unstats.un.org",
   "isi-web.org", "www.iso.org", "doi.org",
 ]);
-const AUTHOR_HOSTS = new Set(["miguelhernan.org", "otexts.com", "plato.stanford.edu", "amplitude.com", "www.sqlite.org"]);
+const AUTHOR_HOSTS = new Set(["miguelhernan.org", "otexts.com", "amplitude.com", "www.sqlite.org"]);
 const KINDS = ["법령", "행정규칙", "기관 지침", "국제 기준", "교재·업계"];
 
 const cited = new Set();
@@ -28,7 +28,9 @@ function parseSources(text) {
   const sources = new Map();
   const problems = [];
   for (const line of text.split("\n")) {
-    if (!/^\| `[a-z0-9-]+` \|/.test(line)) continue;
+    if (!line.startsWith("|")) continue;
+    if (/^\| 키 \|/.test(line) || /^\|[-| ]+\|$/.test(line)) continue;
+    if (!/^\| `[a-z0-9-]+` \|/.test(line)) { problems.push(`sources.md 키 형식 오류: ${line.slice(0, 40)}`); continue; }
     const cells = line.split("|").slice(1, -1).map((c) => c.trim());
     if (cells.length !== 7) { problems.push(`sources.md 칸 수 오류: ${line.slice(0, 40)}`); continue; }
     const [k, title, org, kind, url, date, note] = cells;
@@ -37,9 +39,15 @@ function parseSources(text) {
     if (!title || !org) problems.push(`sources.md ${key}: 명칭·기관 없음`);
     if (!KINDS.includes(kind)) problems.push(`sources.md ${key}: 종류 오류 ${kind}`);
     let host = "";
-    try { host = new URL(url.replace(/^<|>$/g, "")).host; } catch { problems.push(`sources.md ${key}: URL 오류`); }
+    try {
+      const u = new URL(url.replace(/^<|>$/g, ""));
+      if (u.protocol !== "https:" || !u.host) problems.push(`sources.md ${key}: https 주소가 아님`);
+      else host = u.host;
+    } catch { problems.push(`sources.md ${key}: URL 오류`); }
     if (host && !OFFICIAL_HOSTS.has(host) && !(kind === "교재·업계" && AUTHOR_HOSTS.has(host))) problems.push(`sources.md ${key}: 허용 목록에 없는 호스트 ${host}`);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) problems.push(`sources.md ${key}: 조회일 형식 오류`);
+    const d = new Date(`${date}T00:00:00Z`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(d) || d.toISOString().slice(0, 10) !== date) problems.push(`sources.md ${key}: 조회일 형식 오류`);
+    else if (d > new Date()) problems.push(`sources.md ${key}: 조회일이 미래`);
     if (/미확인/.test(line)) problems.push(`sources.md ${key}: 미확인 표시가 남아 있음`);
     sources.set(key, { kind, note });
   }
@@ -49,6 +57,7 @@ function parseSources(text) {
 function parseCurriculum(text) {
   const modules = new Map();
   const problems = [];
+  for (const h of text.matchAll(/^(#{2,6}) ([A-Z]\d+) ·/gm)) if (h[1] !== "###") problems.push(`모듈 제목 수준 오류: ${h[2]}`);
   const blocks = text.split(/^### /m).slice(1);
   for (const block of blocks) {
     const head = block.split("\n")[0];
@@ -67,7 +76,9 @@ function parseCurriculum(text) {
     modules.set(id, prereq);
     for (const name of ["국내 근거", "글로벌 비교"]) {
       const v = fields[name] || "";
-      const keys = [...v.matchAll(/\[([a-z0-9-]+)\]/g)].map((x) => x[1]);
+      const raw = [...v.matchAll(/\[([^\]]+)\]/g)].map((x) => x[1]);
+      for (const k of raw) if (!/^[a-z0-9-]+$/.test(k)) problems.push(`${id}: 키 형식 오류 [${k}]`);
+      const keys = raw.filter((k) => /^[a-z0-9-]+$/.test(k));
       if (!keys.length && !(name === "국내 근거" && v.startsWith(NO_LAW))) problems.push(`${id}: 「${name}」에 출처 키 없음`);
       if (name === "국내 근거" && v.startsWith(NO_LAW) && !/ — ./.test(v)) problems.push(`${id}: 「${NO_LAW}」에 이유 없음`);
       for (const k of keys) cited.add(`${id}\t${k}`);
@@ -87,14 +98,12 @@ function parseCurriculum(text) {
 }
 
 function findVisualAssets(files) {
-  const allowedJs = /^tools\/.*\.m?js$/;
-  return files.filter((f) => /\.(html?|css|svg|png|jpe?g|gif|webp|avif)$/i.test(f) || (/\.m?js$/i.test(f) && !allowedJs.test(f)));
+  return files.filter((f) => /\.(html?|xhtml|css|svg|png|jpe?g|gif|webp|avif|ico|bmp|tiff?|mp4|webm|mov)$/i.test(f) || (/\.[cm]?jsx?$|\.tsx?$/i.test(f) && f !== "tools/check.mjs"));
 }
 
+// 튜터 지침 파일 전체에서 마크업 시작 태그를 찾는다(코드 펜스 여부와 상관없이).
 function findTemplateMarkup(name, text) {
-  const hits = [];
-  for (const m of text.matchAll(/(```|~~~)[\s\S]*?\1/g)) if (/<(!doctype|html|svg|style|canvas|script)\b/i.test(m[0])) hits.push(name);
-  return hits;
+  return /<(!doctype|html|svg|style|canvas|script)\b/i.test(text) ? [name] : [];
 }
 
 function main() {
@@ -107,9 +116,13 @@ function main() {
   for (const c of cited) { const [id, k] = c.split("\t"); used.add(k); if (!sources.has(k)) errors.push(`${id}: 출처 목록에 없는 키 [${k}]`); }
   for (const k of sources.keys()) if (!used.has(k)) errors.push(`sources.md: 커리큘럼이 쓰지 않는 키 ${k}`);
 
-  const files = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard", "-z"], { cwd: root, encoding: "utf8" }).split("\0").filter(Boolean);
+  let files;
+  try {
+    files = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard", "-z"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).split("\0").filter(Boolean);
+  } catch { console.error("FAIL git 작업 폴더가 아님 — git clone한 사본에서 실행한다"); process.exit(1); }
   for (const f of findVisualAssets(files)) errors.push(`미리 만든 시각 자료 금지: ${f}`);
-  for (const f of files.filter((x) => x.endsWith(".md") && existsSync(join(root, x)))) for (const n of findTemplateMarkup(f, read(f))) errors.push(`복사용 마크업 금지: ${n}`);
+  const guidance = (f) => f === "CLAUDE.md" || f === "README.md" || /^(tutor|\.claude\/skills|curriculum)\//.test(f);
+  for (const f of files.filter((x) => guidance(x) && x.endsWith(".md") && existsSync(join(root, x)))) for (const n of findTemplateMarkup(f, read(f))) errors.push(`복사용 마크업 금지: ${n}`);
 
   for (const p of [".claude/settings.json", "learner-template/state.json"]) {
     try { JSON.parse(read(p)); } catch (e) { errors.push(`${p}: JSON 오류 ${e.constructor.name}`); }
@@ -118,7 +131,9 @@ function main() {
   for (const s of readdirSync(join(root, ".claude/skills"))) {
     if (statSync(join(root, ".claude/skills", s)).isDirectory() && !existsSync(join(root, ".claude/skills", s, "SKILL.md"))) errors.push(`스킬 ${s}: SKILL.md 없음`);
   }
-  if (!read(".gitignore").split("\n").includes("learner/")) errors.push(".gitignore에 learner/ 없음");
+  for (const probe of ["learner/state.json", "learner/log.md", "learner/lab/a.csv", "learner/studio/x/01.html"]) {
+    try { execFileSync("git", ["check-ignore", "-q", probe], { cwd: root, stdio: "ignore" }); } catch { errors.push(`git이 무시하지 않음: ${probe}`); }
+  }
 
   if (errors.length) { console.error(errors.map((e) => `FAIL ${e}`).join("\n")); process.exit(1); }
   console.log(`OK 모듈 ${modules.size}개, 출처 ${sources.size}개, 파일 ${files.length}개 검사`);

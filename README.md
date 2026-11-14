@@ -6,17 +6,19 @@
 
 ## 시작하기
 
-준비물은 Git, [GitHub CLI](https://cli.github.com)(`gh`), Claude Code 또는 Claude Desktop, 그리고 평소 쓰는 스프레드시트 프로그램(Excel·Google Sheets·Numbers)입니다. 비공개 리포이므로 먼저 GitHub에서 보낸 초대를 수락하고, 터미널에서 `gh auth login`으로 로그인합니다. 다른 설치는 필요 없습니다. SQL 실습은 macOS에 기본으로 있는 `sqlite3`을 쓰거나, 원하면 튜터와 함께 설치하고, 원하지 않으면 스프레드시트로 같은 내용을 연습합니다.
+준비물은 Git, [GitHub CLI](https://cli.github.com)(`gh`), Claude Code 또는 Claude Desktop, 그리고 평소 쓰는 스프레드시트 프로그램(Excel·Google Sheets·Numbers)입니다. 비공개 리포이므로 먼저 GitHub에서 보낸 초대를 수락하고, 터미널에서 `gh auth login`으로 로그인합니다. 다른 설치는 필요 없습니다. SQL 실습은 macOS에 기본으로 있는 `sqlite3`을 씁니다. Windows에는 기본으로 없으므로 원하면 튜터와 함께 설치하고, 원하지 않으면 스프레드시트로 같은 내용을 연습합니다.
 
 ```bash
-cd ~/Desktop
+cd ~
 gh repo clone holmesLee-ws/go-data-analytics
 ```
+
+홈 폴더(macOS `/Users/<이름>`, Windows `C:\Users\<이름>`) 아래에 `go-data-analytics` 폴더가 생깁니다. Windows에서 OneDrive가 바탕화면을 옮긴 경우가 있어 바탕화면 대신 홈 폴더를 씁니다.
 
 **Claude Code**
 
 ```bash
-cd ~/Desktop/go-data-analytics
+cd ~/go-data-analytics
 claude
 ```
 
@@ -24,7 +26,7 @@ claude
 
 **Claude Desktop**
 
-Code 탭에서 데스크탑의 `go-data-analytics` 폴더를 선택합니다. Chat 탭이 아니라 Code 탭이어야 튜터 규칙이 적용됩니다.
+Code 탭에서 홈 폴더의 `go-data-analytics` 폴더를 선택합니다. Chat 탭이 아니라 Code 탭이어야 튜터 규칙이 적용됩니다.
 
 어느 쪽이든 「안녕」이라고 입력하면 시작합니다.
 

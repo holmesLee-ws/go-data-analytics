@@ -5,7 +5,8 @@
       "Edit(/learner/state.json)",
       "Edit(/learner/log.md)",
       "Edit(/learner/studio/**/*.html)",
-      "Edit(/learner/lab/**)",
+      "Edit(/learner/lab/**/*.csv)",
+      "Edit(/learner/lab/**/*.sql)",
       "WebSearch",
       "WebFetch",
       "Bash(open learner/studio/*.html)",
@@ -17,7 +18,9 @@
       "Bash(open *..*)",
       "Bash(xdg-open *..*)",
       "Bash(start *..*)",
-      "PowerShell(Start-Process *..*)"
+      "PowerShell(Start-Process *..*)",
+      "Bash(sqlite3 *)",
+      "PowerShell(sqlite3 *)"
     ]
   }
 }
