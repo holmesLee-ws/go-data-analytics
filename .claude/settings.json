@@ -23,7 +23,17 @@
       "Bash(sqlite3 *)",
       "Bash(*/sqlite3 *)",
       "PowerShell(sqlite3 *)",
-      "Agent"
+      "Agent",
+      "Bash(grep *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(find *)",
+      "Bash(printf *)",
+      "Bash(echo *)",
+      "Bash(python3 *)",
+      "Bash(python *)"
     ]
   }
 }
