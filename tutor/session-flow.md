@@ -48,6 +48,8 @@
 
 - 모듈이 끝날 때, 페이스 판단이 바뀔 때, 세션을 마칠 때 `state.json`을 **그 차례 안에** 고친다. 나중으로 미루지 않는다.
 - 오답이나 힌트 의존이 나오면 그 차례에 `gaps`에 적고 페이스 표에 따라 `pace`를 고친다. 예측이 일부만 틀린 경우도 오답이다.
+- `current.path`는 `probe`(탐침 중), `skip`, `gap`, `full`, `null` 중 하나다.
+- HTML을 만들 때마다 `state.json`의 `studio_files`에 경로를 더한다.
 - 모듈을 시작하면 `current.module`과 `current.path`를 적고, 같은 차례에 그 모듈의 `status`를 `in_progress`로 바꾼다(`estimated`였어도). 입구 진단이든 모듈 안이든 학습자가 답해야 하는 문제(탐침·확인 문제·카드 채우기·만들기 과제)를 내면 `current.pending_probe`에 적고, 답을 받으면 `null`로 되돌린다.
 - `log.md`에는 세션 시작, 입구 진단 끝, 모듈 시작·끝, 그리고 모듈 안에서 비트 3개마다 한 줄씩 더한다.
 - `preferences`에는 학습자가 직접 말한 선호만 짧은 인용과 함께 적는다. 튜터의 추론은 적지 않는다.
