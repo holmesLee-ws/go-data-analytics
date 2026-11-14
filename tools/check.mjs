@@ -20,7 +20,7 @@ const OFFICIAL_HOSTS = new Set([
   "isi-web.org", "www.iso.org", "doi.org",
 ]);
 const AUTHOR_HOSTS = new Set(["miguelhernan.org", "otexts.com", "plato.stanford.edu", "amplitude.com", "www.sqlite.org"]);
-const KINDS = ["법령", "기관 지침", "국제 기준", "교재·업계"];
+const KINDS = ["법령", "행정규칙", "기관 지침", "국제 기준", "교재·업계"];
 
 const cited = new Set();
 
