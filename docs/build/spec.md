@@ -54,7 +54,7 @@ R1~R9는 go-develop의 요구를 이 영역에 맞춘 것이고, R10~R14는 시�
 | R2 | 위 다섯 영역의 기본 커리큘럼, 큰 윤곽만, 순차 학습 | `curriculum/map.md`의 모듈마다 선수·핵심 질문·목표·만들어 볼 것·국내 근거·글로벌 비교가 있고 강의 본문은 없다. `tools/check.mjs`의 형식·선수 관계 검사가 통과한다. G3에서 튜터가 `state.json`과 선수 관계로 다음 모듈을 고른다. |
 | R3 | 클론해 Claude Code 또는 Claude Desktop으로 로컬 진행 | README에 두 경로의 시작법이 있다. node·python·DB 설치 없이 시작할 수 있다. 「안녕」 같은 어떤 첫 메시지로도 첫 세션 절차가 시작된다. |
 | R4 | 시각 자료를 조합한 HTML을 학습자와 실시간으로 만든다 | 전체·빈틈 경로로 진행한 모듈마다 도식이 든 HTML이 `learner/studio/`에 1개 이상 있고, 학습자의 답이 나온 뒤 그 내용을 담아 고쳐지거나 새로 생긴다. 조사 자료를 쓰면 URL과 조회일이 페이지에 있다. |
-| R5 | 시각 자료를 미리 만들어 붙이지 않는다 | `git ls-files`에 `.html`·`.css`·`.svg`·이미지·브라우저용 `.js`가 0개이고, 지침 코드 블록에 `<html`·`<svg`·`<style`·`<!doctype`이 없다. `tools/check.mjs`가 검사한다. |
+| R5 | 시각 자료를 미리 만들어 붙이지 않는다 | `git ls-files`에 `.html`·`.css`·`.svg`·이미지·브라우저용 `.js`가 0개이고, 지침 파일(CLAUDE.md, README, tutor/, .claude/, curriculum/, learner-template/) 전체에 `<html`·`<svg`·`<style`·`<!doctype`이 없다. `tools/check.mjs`가 검사한다. |
 | R6 | 아는 영역은 빠르게 넘어가고 성숙도를 가볍게 확인 | 모듈마다 튜터 응답 3차례 안에 건너뛸지 정한다. 영역 빠른 확인 경로가 있다. 자기 신고만으로 숙달로 기록하지 않는다. |
 | R7 | 너무 빠름·보강 필요·지루함을 살펴 지원 | 세 상태의 신호와 대응이 규칙에 있고, 페르소나 세션에서 각각 다른 대응이 나오며 `state.json`에 남는다. |
 | R8 | 학습 이어가기 | 새 세션이 `learner/state.json`을 읽고 복습 질문으로 이어간다. `learner/`는 git 제외다. |

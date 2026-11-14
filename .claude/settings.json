@@ -19,7 +19,9 @@
       "Bash(xdg-open *..*)",
       "Bash(start *..*)",
       "PowerShell(Start-Process *..*)",
+      "Bash(sqlite3)",
       "Bash(sqlite3 *)",
+      "Bash(*/sqlite3 *)",
       "PowerShell(sqlite3 *)"
     ]
   }

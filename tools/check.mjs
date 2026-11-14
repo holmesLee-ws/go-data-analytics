@@ -27,7 +27,8 @@ const cited = new Set();
 function parseSources(text) {
   const sources = new Map();
   const problems = [];
-  for (const line of text.split("\n")) {
+  for (const rawLine of text.split("\n")) {
+    const line = rawLine.trimStart();
     if (!line.startsWith("|")) continue;
     if (/^\| 키 \|/.test(line) || /^\|[-| ]+\|$/.test(line)) continue;
     if (!/^\| `[a-z0-9-]+` \|/.test(line)) { problems.push(`sources.md 키 형식 오류: ${line.slice(0, 40)}`); continue; }
@@ -47,7 +48,7 @@ function parseSources(text) {
     if (host && !OFFICIAL_HOSTS.has(host) && !(kind === "교재·업계" && AUTHOR_HOSTS.has(host))) problems.push(`sources.md ${key}: 허용 목록에 없는 호스트 ${host}`);
     const d = new Date(`${date}T00:00:00Z`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(d) || d.toISOString().slice(0, 10) !== date) problems.push(`sources.md ${key}: 조회일 형식 오류`);
-    else if (d > new Date()) problems.push(`sources.md ${key}: 조회일이 미래`);
+    else if (d > new Date(Date.now() + 86400000)) problems.push(`sources.md ${key}: 조회일이 미래`);
     if (/미확인/.test(line)) problems.push(`sources.md ${key}: 미확인 표시가 남아 있음`);
     sources.set(key, { kind, note });
   }
@@ -57,7 +58,7 @@ function parseSources(text) {
 function parseCurriculum(text) {
   const modules = new Map();
   const problems = [];
-  for (const h of text.matchAll(/^(#{2,6}) ([A-Z]\d+) ·/gm)) if (h[1] !== "###") problems.push(`모듈 제목 수준 오류: ${h[2]}`);
+  for (const h of text.matchAll(/^(#{1,6}) ([A-Z]\d+) ·/gm)) if (h[1] !== "###") problems.push(`모듈 제목 수준 오류: ${h[2]}`);
   const blocks = text.split(/^### /m).slice(1);
   for (const block of blocks) {
     const head = block.split("\n")[0];
@@ -121,8 +122,8 @@ function main() {
     files = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard", "-z"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).split("\0").filter(Boolean);
   } catch { console.error("FAIL git 작업 폴더가 아님 — git clone한 사본에서 실행한다"); process.exit(1); }
   for (const f of findVisualAssets(files)) errors.push(`미리 만든 시각 자료 금지: ${f}`);
-  const guidance = (f) => f === "CLAUDE.md" || f === "README.md" || /^(tutor|\.claude\/skills|curriculum)\//.test(f);
-  for (const f of files.filter((x) => guidance(x) && x.endsWith(".md") && existsSync(join(root, x)))) for (const n of findTemplateMarkup(f, read(f))) errors.push(`복사용 마크업 금지: ${n}`);
+  const guidance = (f) => f === "CLAUDE.md" || f === "README.md" || /^(tutor|\.claude|curriculum|learner-template)\//.test(f);
+  for (const f of files.filter((x) => guidance(x) && /\.(md|txt|json)$/.test(x) && existsSync(join(root, x)))) for (const n of findTemplateMarkup(f, read(f))) errors.push(`복사용 마크업 금지: ${n}`);
 
   for (const p of [".claude/settings.json", "learner-template/state.json"]) {
     try { JSON.parse(read(p)); } catch (e) { errors.push(`${p}: JSON 오류 ${e.constructor.name}`); }
