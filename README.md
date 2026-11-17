@@ -6,7 +6,7 @@
 
 ## 시작하기
 
-준비물은 Git, [GitHub CLI](https://cli.github.com)(`gh`), Claude Code 또는 Claude Desktop, 그리고 평소 쓰는 스프레드시트 프로그램(Excel·Google Sheets·Numbers)입니다. 비공개 리포이므로 먼저 GitHub에서 보낸 초대를 수락하고, 터미널에서 `gh auth login`으로 로그인합니다. 다른 설치는 필요 없습니다. SQL 실습은 macOS에 기본으로 있는 `sqlite3`을 씁니다. Windows에는 기본으로 없으므로 원하면 튜터와 함께 설치하고, 원하지 않으면 스프레드시트로 같은 내용을 연습합니다.
+준비물은 Git, [GitHub CLI](https://cli.github.com)(`gh`), Claude Code 또는 Claude Desktop, 그리고 평소 쓰는 스프레드시트 프로그램(Excel·Google Sheets·Numbers)입니다. 공개 리포라 초대 없이 받을 수 있습니다. 터미널에서 `gh auth login`으로 한 번 로그인합니다. 다른 설치는 필요 없습니다. SQL 실습은 macOS에 기본으로 있는 `sqlite3`을 씁니다. Windows에는 기본으로 없으므로 원하면 튜터와 함께 설치하고, 원하지 않으면 스프레드시트로 같은 내용을 연습합니다.
 
 ```bash
 cd ~
